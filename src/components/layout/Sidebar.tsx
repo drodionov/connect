@@ -26,7 +26,9 @@ const Sidebar = () => {
   ];
 
   const sidebarItems = items.map((item) => (
-          <SidebarItem key={item.href} href={item.href} label={item.label} icon={item.icon}/>
+          <SidebarItem key={item.href} href={item.href} label={item.label} icon={item.icon}
+                       onClick={() => {
+                       }}/>
       )
   )
 
