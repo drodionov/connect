@@ -1,4 +1,5 @@
 import {IconType} from "react-icons";
+import React from "react";
 
 interface SidebarItemProp {
   label: string;
