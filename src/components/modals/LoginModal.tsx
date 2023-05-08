@@ -3,6 +3,7 @@ import {useCallback, useState} from "react";
 import Input from "@/components/Input";
 import Modal from "@/components/Modal";
 import useRegisterModal from "@/hooks/useRegisterModal";
+import {signIn} from "next-auth/react";
 
 const LoginModal = () => {
   const loginModal = useLoginModal();
@@ -25,7 +26,10 @@ const LoginModal = () => {
     try {
       setIsLoading(true);
 
-      //TODO: add login
+      await signIn('credentials', {
+        email,
+        password
+      });
 
       loginModal.onClose();
     } catch (error) {
@@ -33,7 +37,7 @@ const LoginModal = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [loginModal]);
+  }, [loginModal, email, password]);
 
   const bodyContent = (
       <div className="flex flex-col gap-4">
@@ -46,7 +50,8 @@ const LoginModal = () => {
 
   const footerContent = (
       <div className="text-neutral-400 text-center mt-4">
-        <p>First time using Connect? <span onClick={onToggle} className="text-white cursor-pointer hover:underline">
+        <p>First time using Connect? <span onClick={onToggle}
+                                           className="text-white cursor-pointer hover:underline">
             Create an account
           </span>
         </p>
@@ -55,7 +60,8 @@ const LoginModal = () => {
 
   return (
       <Modal disabled={isLoading} isOpen={loginModal.isOpen} title="Login" actionLabel="Sign In"
-             onClose={loginModal.onClose} onSubmit={onSubmit} body={bodyContent} footer={footerContent}/>
+             onClose={loginModal.onClose} onSubmit={onSubmit} body={bodyContent}
+             footer={footerContent}/>
   )
 }
 
