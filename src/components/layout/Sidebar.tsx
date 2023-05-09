@@ -20,19 +20,25 @@ const Sidebar = () => {
     {
       label: 'Notifications',
       href: '/notifications',
-      icon: BsBellFill
+      icon: BsBellFill,
+      auth: true
     },
     {
       label: 'Profile',
       href: '/users/123',
-      icon: FaUser
+      icon: FaUser,
+      auth: true
     }
   ];
 
   const sidebarItems = items.map((item) => (
-          <SidebarItem key={item.href} href={item.href} label={item.label} icon={item.icon}
-                       onClick={() => {
-                       }}/>
+          <SidebarItem
+              key={item.href}
+              href={item.href}
+              label={item.label}
+              icon={item.icon}
+              auth={item.auth}
+          />
       )
   )
 
