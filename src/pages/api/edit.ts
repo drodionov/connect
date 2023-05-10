@@ -3,7 +3,7 @@ import serverAuth from "@/libs/serverAuth";
 
 import prisma from '@/libs/prismadb';
 
-export default async (
+const handler = async (
     req: NextApiRequest,
     res: NextApiResponse
 ) => {
@@ -39,4 +39,6 @@ export default async (
     console.log("Error on user profile update: " + error);
     return res.status(400).end();
   }
-}
+};
+
+export default handler;
