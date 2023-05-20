@@ -37,9 +37,9 @@ const Form: React.FC<FormProps> = (
       toast.success('Tweet Created');
 
       setBody('');
-      await mutatePosts();
 
       await axios.post('/api/posts', {body});
+      mutatePosts();
     } catch (error) {
       toast.error("Something went wrong");
     } finally {
