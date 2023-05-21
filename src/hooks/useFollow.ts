@@ -1,21 +1,23 @@
-import useCurrentUser from "@/hooks/useCurrentUser";
-import useUser from "@/hooks/useUser";
-import useLoginModal from "@/hooks/useLoginModal";
-import {useCallback, useMemo} from "react";
-import {toast} from "react-hot-toast";
 import axios from "axios";
+import { useCallback, useMemo } from "react";
+import { toast } from "react-hot-toast";
+
+import useCurrentUser from "./useCurrentUser";
+import useLoginModal from "./useLoginModal";
+import useUser from "./useUser";
 
 const useFollow = (userId: string) => {
-  const {data: currentUser, mutate: mutateCurrentUser} = useCurrentUser();
-  const {mutate: mutateFetchedUser} = useUser(userId);
+  const { data: currentUser, mutate: mutateCurrentUser } = useCurrentUser();
+  const { mutate: mutateFetchedUser } = useUser(userId);
 
   const loginModal = useLoginModal();
+  console.log("!!! " + userId);
 
   const isFollowing = useMemo(() => {
     const list = currentUser?.followingIds || [];
 
     return list.includes(userId);
-  }, [userId, currentUser?.followingIds]);
+  }, [currentUser, userId]);
 
   const toggleFollow = useCallback(async () => {
     if (!currentUser) {
@@ -24,25 +26,26 @@ const useFollow = (userId: string) => {
 
     try {
       let request;
-
       if (isFollowing) {
-        request = () => axios.delete('/api/follow', {data: {userId}});
+        request = () => axios.delete(`/api/follow?userId=${userId}`);
       } else {
-        request = () => axios.post('/api/follow', {userId});
+        request = () => axios.post('/api/follow', { userId });
       }
 
-      await request;
-
+      await request();
       mutateCurrentUser();
-      mutateCurrentUser();
+      mutateFetchedUser();
 
       toast.success('Success');
     } catch (error) {
-      toast.error("Something went wrong");
+      toast.error('Something went wrong');
     }
   }, [currentUser, isFollowing, userId, mutateCurrentUser, mutateFetchedUser, loginModal]);
 
-  return {isFollowing, toggleFollow};
+  return {
+    isFollowing,
+    toggleFollow,
+  }
 }
 
 export default useFollow;
