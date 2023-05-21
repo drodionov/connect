@@ -1,6 +1,7 @@
 import {NextApiRequest, NextApiResponse} from "next";
+
+import prisma from '@/libs/prismadb';
 import serverAuth from "@/libs/serverAuth";
-import prisma from "@/libs/prismadb";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== 'POST' && req.method !== 'DELETE') {
@@ -10,8 +11,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const postId = req.method === 'POST' ? req.body.postId : req.query.postId;
     const {currentUser} = await serverAuth(req, res);
+
     if (!postId || typeof postId !== 'string') {
-      throw new Error('Invalid post id');
+      throw new Error('Invalid ID');
     }
 
     const post = await prisma.post.findUnique({
@@ -21,7 +23,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     });
 
     if (!post) {
-      throw new Error('Post not found: ' + post);
+      throw new Error('Invalid ID');
     }
 
     let updatedLikedIds = [...(post.likedIds || [])];
@@ -31,10 +33,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     if (req.method === 'DELETE') {
-      updatedLikedIds = updatedLikedIds.filter(likedId => likedId !== currentUser.id);
+      updatedLikedIds = updatedLikedIds.filter((likedId) => likedId !== currentUser?.id);
     }
 
-    const updatedPost = prisma.post.update({
+    const updatedPost = await prisma.post.update({
       where: {
         id: postId
       },
@@ -44,9 +46,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     });
 
     return res.status(200).json(updatedPost);
-
   } catch (error) {
-    console.log("While trying to like: " + error);
+    console.log(error);
     return res.status(503).end();
   }
 };

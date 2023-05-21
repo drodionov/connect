@@ -11,7 +11,6 @@ const useFollow = (userId: string) => {
   const { mutate: mutateFetchedUser } = useUser(userId);
 
   const loginModal = useLoginModal();
-  console.log("!!! " + userId);
 
   const isFollowing = useMemo(() => {
     const list = currentUser?.followingIds || [];
