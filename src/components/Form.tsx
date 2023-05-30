@@ -34,18 +34,20 @@ const Form: React.FC<FormProps> = (
     try {
       setIsLoading(true);
 
+      const url = isComment ? `/api/comments?postId=${postId}` : '/api/posts';
+
+      await axios.post(url, {body});
+
       toast.success('Tweet Created');
 
       setBody('');
-
-      await axios.post('/api/posts', {body});
-      mutatePosts();
+      await mutatePosts();
     } catch (error) {
       toast.error("Something went wrong");
     } finally {
       setIsLoading(false);
     }
-  }, [body, mutatePosts]);
+  }, [body, mutatePosts, isComment, postId]);
 
   return (
       <div className="border-b-[1px] border-neutral-800 px-5 py-2">
