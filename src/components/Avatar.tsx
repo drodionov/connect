@@ -29,7 +29,8 @@ const Avatar: React.FC<AvatarProps> = (
       <div
           className={`${hasBorder ? 'border-4 border-black' : ''} ${isLarge ? 'h-32 w-32' : 'h-12 w-12'} rounded-full hover:opacity-90 transition cursor-pointer relative`}>
         <Image fill style={{objectFit: 'cover', borderRadius: '100%'}}
-               src={fetchedUser?.profileImage || '/images/placeholder.png'} alt="Avatar" onClick={onClick}/>
+               src={fetchedUser?.profileImage || '/images/placeholder.png'} alt="Avatar"
+               onClick={onClick}/>
       </div>
   )
 }
